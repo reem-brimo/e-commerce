@@ -18,7 +18,7 @@ namespace E_Commerce.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetValue<string>("Local:ConnectionString"));
+                options.UseSqlServer(configuration.GetValue<string>("server:ConnectionString"));
             });
 
             services.AddIdentity<UserSet, RoleSet>()
