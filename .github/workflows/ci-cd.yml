@@ -46,7 +46,7 @@ jobs:
           dotnet-version: '8.0'
 
       - name: Publish Project
-        run: dotnet publish -c Release -o ./publish
+        run: dotnet publish ecommerce.API/src/App/E-Commerce.App -c Release -o ./publish
 
       - name: Upload to Somee.com via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
