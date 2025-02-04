@@ -3,10 +3,10 @@ name: .NET CI/CD Pipeline
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - server
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   build-and-test:
