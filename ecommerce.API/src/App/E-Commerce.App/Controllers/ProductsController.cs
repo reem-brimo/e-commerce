@@ -21,7 +21,7 @@ namespace E_Commerce.App.Controllers
         /// </summary>
         /// <returns>List of products</returns>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult GetProducts()
         {
             var result = _productService.GetAll();
@@ -59,7 +59,7 @@ namespace E_Commerce.App.Controllers
         /// <response code="201">Product added successfully</response>
         /// <response code="403">Forbidden - Only admins can add products</response>
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProduct(ProductDetailsDto productDto)
         {
             var result =  await _productService.AddAsync(productDto);
