@@ -8,5 +8,6 @@ namespace E_Commerce.Services.Interfaces
         Task AddUserAsync(UserSet user, string password);
         Task<bool> CheckPasswordAsync(UserSet user, string password);
         Task AddUserToRoleAsync(UserSet user, string role);
+        Task<int> GetUserId();
     }
 }

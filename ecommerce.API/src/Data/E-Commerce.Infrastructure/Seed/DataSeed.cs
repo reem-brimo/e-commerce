@@ -35,7 +35,7 @@ namespace E_Commerce.Infrastructure.Seed
                     products.Add(new Product
                     {
                         Name = $"Product {i}",
-                        Price = 10.0m * i,
+                        Price = 10.0 * i,
                         Description = $"Description for Product {i}",
                         Stock = 100 + i,
                         ImageUrl = $"https://example.com/product{i}.jpg"
@@ -83,10 +83,9 @@ namespace E_Commerce.Infrastructure.Seed
                             OrderId = order.Id,
                             ProductId = product.Id,
                             Quantity = quantity,
-                            Price = (float)(product.Price * quantity)
                         };
                         orderItems.Add(orderItem);
-                        order.TotalAmount += (int)orderItem.Price;
+                        order.TotalAmount += orderItem.Quantity * product.Price;
                     }
                 }
                 context.AddRange(orderItems);

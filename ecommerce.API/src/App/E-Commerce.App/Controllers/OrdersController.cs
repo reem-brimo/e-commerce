@@ -7,41 +7,29 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_Commerce.App.Controllers
 {
     [Route("api/[controller]")]
-    public class OrdersController : BaseController
+    public class OrdersController(IOrderService orderService) : BaseController
     {
-        private readonly IProductService _productService;
+        private readonly IOrderService _orderService = orderService;
 
-        public OrdersController(IProductService productService)
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreateOrderAsync(UserOrderDto order)
         {
-            _productService = productService;
+            var result = await _orderService.AddAsync(order);
+            return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
-        /// <summary>
-        /// Retrieves all products.
-        /// </summary>
-        /// <returns>List of products</returns>
-        // [HttpGet]
-        // //[Authorize(Roles = "Admin")]
-        // public IActionResult CreateOrder()
-        // {
-        //     var result = _productService.GetAll();
-        //     return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
-        // }
+        //get old orders
+        //[HttpGet]
+        //[Route("/user-orders")]
+        //[Authorize]
+        //public async Task<IActionResult>GetOrdersAsync()
+        //{
+        //    var result = await _productService.GetByIdAsync(id);
+        //    return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
 
-        // /// <summary>
-        // /// Retrieves a product by ID.
-        // /// </summary>
-        // /// <param name="id">Product ID</param>
-        // /// <returns>Product details</returns>
-        // [HttpGet]
-        // [Route("[action]")]
-        // [Authorize]
-        // public async Task<IActionResult> CheckOut(int id)
-        // {
-        //     var result = await _productService.GetByIdAsync(id);
-        //     return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
-
-        // }
+        //}
 
 
     }

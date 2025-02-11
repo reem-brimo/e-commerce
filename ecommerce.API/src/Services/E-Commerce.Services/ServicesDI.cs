@@ -44,6 +44,7 @@ namespace E_Commerce.Services
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IOrderService, OrderService>();
 
 
             services.AddScoped<IGeminiService, GeminiService>();

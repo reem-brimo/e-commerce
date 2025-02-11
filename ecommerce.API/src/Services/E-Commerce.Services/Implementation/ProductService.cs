@@ -33,6 +33,7 @@ namespace E_Commerce.Services.Implementation
 
             var product = new ProductDetailsDto
             {
+                Id = productEntity.Id,
                 Description = productEntity.Description,
                 Name = productEntity.Name,
                 Price = productEntity.Price,
