@@ -20,11 +20,10 @@ ASP.NET Core – Backend framework Entity Framework Core – Database ORM SQL Se
 This API is deployed using GitHub Actions and hosted on Somee.com. The CI/CD pipeline runs on every push to the server branch.
 
 # Contributing
-1.Fork the repository
-2.Create a new feature branch
-3.Commit your changes
-4.Submit a pull request
-# E-Commerce API
+1. Fork the repository
+2. Create a new feature branch
+3. Commit your changes
+4. Submit a pull request
 
 
 
