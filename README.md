@@ -27,7 +27,8 @@ This project follows the **Repository Pattern** to encapsulate database logic an
 
 # Installation & Setup
 ## Prerequisites
-.NET SDK (Specify version, e.g., .NET 8) SQL Server (or Docker for database)
+- .NET SDK (.NET 8)
+- SQL Server 2022
 
 ## Deployment
 This API is deployed using GitHub Actions and hosted on Somee.com. The CI/CD pipeline runs on every push to the server branch.
