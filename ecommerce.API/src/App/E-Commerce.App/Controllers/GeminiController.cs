@@ -10,21 +10,10 @@ namespace E_Commerce.App.Controllers
 {
 
     [Route("api/[controller]")]
-    public class GeminiController : BaseController
+    public class GeminiController(IGeminiService geminiService) : BaseController
     {
-        private readonly IGeminiService _geminiService;
+        private readonly IGeminiService _geminiService = geminiService;
 
-        public GeminiController(IGeminiService geminiService)
-        {
-            _geminiService = geminiService;
-        }
-
-      
-        /// <summary>
-        /// Chats with the provided message.
-        /// </summary>
-        /// <param name="message">Chat message</param>
-        /// <returns>Chat reply</returns>
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] string message)
         {

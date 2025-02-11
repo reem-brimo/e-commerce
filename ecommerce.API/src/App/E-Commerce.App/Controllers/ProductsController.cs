@@ -7,19 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_Commerce.App.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductsController : BaseController
+    public class ProductsController(IProductService productService) : BaseController
     {
-        private readonly IProductService _productService;
+        private readonly IProductService _productService = productService;
 
-        public ProductsController(IProductService productService)
-        {
-            _productService = productService;
-        }
-
-        /// <summary>
-        /// Retrieves all products.
-        /// </summary>
-        /// <returns>List of products</returns>
+      
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult GetProducts()
@@ -28,11 +20,6 @@ namespace E_Commerce.App.Controllers
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
-        /// <summary>
-        /// Retrieves a product by ID.
-        /// </summary>
-        /// <param name="id">Product ID</param>
-        /// <returns>Product details</returns>
         [HttpGet("{productId}")]
         [Authorize]
         public async Task<IActionResult> GetProductDetails(int productId)
@@ -51,13 +38,7 @@ namespace E_Commerce.App.Controllers
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
-        /// <summary>
-        /// Adds a new product.
-        /// </summary>
-        /// <param name="productDto">Product data</param>
-        /// <returns>Confirmation message upon successful addition</returns>
-        /// <response code="201">Product added successfully</response>
-        /// <response code="403">Forbidden - Only admins can add products</response>
+       
         [HttpPost]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddProduct(ProductDetailsDto productDto)
@@ -66,14 +47,7 @@ namespace E_Commerce.App.Controllers
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
-        /// <summary>
-        /// Updates an existing product.
-        /// </summary>
-        /// <param name="id">Product ID</param>
-        /// <param name="productDto">Updated product data</param>
-        /// <returns>Confirmation message upon successful update</returns>
-        /// <response code="200">Product updated successfully</response>
-        /// <response code="403">Forbidden - Only admins can update products</response>
+       
         [HttpPut]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(int id,ProductDetailsDto productDto)

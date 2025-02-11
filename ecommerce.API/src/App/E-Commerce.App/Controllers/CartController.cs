@@ -7,18 +7,10 @@ namespace E_Commerce.App.Controllers
 {
     [Route("api/[controller]")]
     //[Authorize]
-    public class CartController : BaseController
+    public class CartController(ICartService cartService) : BaseController
     {
-        private readonly IProductService _productService;
-        private readonly ICartService _cartService;
+        private readonly ICartService _cartService = cartService;
 
-        public CartController(IProductService productService, ICartService cartService)
-        {
-            _productService = productService;
-            _cartService = cartService;
-        }
-
-       
         [HttpPost]
         [Route("{productId}/{quantity}")]
         
@@ -58,5 +50,6 @@ namespace E_Commerce.App.Controllers
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
+        //get current cart
     }
 }

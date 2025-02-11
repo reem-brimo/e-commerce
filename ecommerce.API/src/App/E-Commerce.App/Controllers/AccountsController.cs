@@ -11,21 +11,14 @@ using System.Security.Claims;
 using System.Text;
 
 [Route("api/[controller]")]
-public class AccountsController : BaseController
+public class AccountsController(UserManager<UserSet> userManager,
+    RoleManager<RoleSet> roleManager,
+    IJwtTokenService jwtTokenService
+        ) : BaseController
 {
-    private readonly UserManager<UserSet> _userManager;
-    private readonly RoleManager<RoleSet> _roleManager;
-    private readonly IJwtTokenService _jwtTokenService;
-
-    public AccountsController(UserManager<UserSet> userManager,
-        RoleManager<RoleSet> roleManager,
-        IJwtTokenService jwtTokenService
-        )
-    {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _jwtTokenService = jwtTokenService;
-    }
+    private readonly UserManager<UserSet> _userManager = userManager;
+    private readonly RoleManager<RoleSet> _roleManager = roleManager;
+    private readonly IJwtTokenService _jwtTokenService = jwtTokenService;
 
     [HttpPost]
     [Route("[action]")]
