@@ -13,7 +13,7 @@
         public string PostCode { get; set; }
         public string City { get; set; }
 
-        public List<OrderItemsDto> items { get; set; }
+        public List<OrderItemDto> items { get; set; }
         //public string StripeReference { get; set; }
         //public string SessionId { get; set; }
         //public List<Stock> Stocks { get; set; }

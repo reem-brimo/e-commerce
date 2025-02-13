@@ -1,4 +1,5 @@
-﻿using E_Commerce.Data.Models;
+﻿using Bogus;
+using E_Commerce.Data.Models;
 using E_Commerce.Data.Models.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +60,9 @@ namespace E_Commerce.Infrastructure.Seed
                     {
                         UserId = users[index].Id,
                         OrderDate = DateTime.Now.AddDays(-i),
-                        TotalAmount = 0 // Calculated later based on OrderItems
+                        TotalAmount = 0, // Calculated later based on OrderItems
+                        Address = new Faker().Address.FullAddress()
+
                     });
                 }
                 context.AddRange(orders);

@@ -31,6 +31,7 @@ namespace E_Commerce.Infrastructure
 
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<IReservationRepository,ReservationRepository>();
+            services.AddScoped<IOrderRepository,OrderRepository>();
        
 
             return services;
