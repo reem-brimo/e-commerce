@@ -3,9 +3,8 @@ using E_Commerce.Infrastructure.InfrastructureBases;
 
 namespace E_Commerce.Infrastructure.Repositories.Interfaces
 {
-    public interface IProductRepository : IGenericRepositoryAsync<Product>
+    public interface IOrderRepository : IGenericRepositoryAsync<Order>
     {
-        IEnumerable<Product> GetByIds(List<int> ids);
-      
+
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Mosque.Services.Mappings;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -32,18 +33,20 @@ namespace E_Commerce.Services
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.Issuer,
+                    ValidIssuer = jwtSettings!.Issuer,
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
 
-
+            MappingsConfig.ConfigureMappings();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICartSessionManager, CartSessionManager>();
 
 
             services.AddScoped<IGeminiService, GeminiService>();

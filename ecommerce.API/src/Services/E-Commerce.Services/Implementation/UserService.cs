@@ -1,5 +1,6 @@
 ﻿using E_Commerce.Data.Models.Security;
 using E_Commerce.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace E_Commerce.Services.Implementation
@@ -8,11 +9,16 @@ namespace E_Commerce.Services.Implementation
     {
         private readonly UserManager<UserSet> _userManager;
         private readonly RoleManager<RoleSet> _roleManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(UserManager<UserSet> userManager, RoleManager<RoleSet> roleManager)
+
+        public UserService(UserManager<UserSet> userManager,
+                        RoleManager<RoleSet> roleManager,
+                        IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<UserSet> FindByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
@@ -28,6 +34,17 @@ namespace E_Commerce.Services.Implementation
                 await _roleManager.CreateAsync(new RoleSet { Name = role });
             }
             await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task<int> GetUserId()
+        {
+            var claimsUser = _httpContextAccessor.HttpContext?.User;
+            if (claimsUser == null)
+                return 0;
+
+            var user = await _userManager.GetUserAsync(claimsUser);
+
+            return user!.Id;
         }
     }
 }

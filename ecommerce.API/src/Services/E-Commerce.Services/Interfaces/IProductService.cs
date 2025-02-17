@@ -1,6 +1,7 @@
 ﻿using E_Commerce.SharedKernal.OperationResults;
 using E_Commerce.Services.DTOs;
 using System.Net;
+using E_Commerce.Data.Models;
 
 namespace E_Commerce.Services.Interfaces
 {
@@ -14,5 +15,6 @@ namespace E_Commerce.Services.Interfaces
 
         OperationResult<HttpStatusCode, IEnumerable<ProductDto>> GetProductsPage(int pageNumber = 1, int pageSize = 10);
         OperationResult<HttpStatusCode, IEnumerable<ProductDto>> SearchProducts(string searchTerm);
+        OperationResult<HttpStatusCode, IEnumerable<Product>> GetByIds(List<int> ids);
     }
 }

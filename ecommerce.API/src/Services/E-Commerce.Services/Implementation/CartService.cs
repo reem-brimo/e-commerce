@@ -1,6 +1,8 @@
-﻿using E_Commerce.Services.DTOs;
+﻿using E_Commerce.Data.Models;
+using E_Commerce.Services.DTOs;
 using E_Commerce.Services.Interfaces;
 using E_Commerce.SharedKernal.OperationResults;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Text.Json;
@@ -9,34 +11,50 @@ namespace E_Commerce.Services.Implementation
 {
     public class CartService : ICartService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
+        private readonly ICartSessionManager _sessionManager;
         private readonly IReservationService _reservationService;
-        private const string CartSessionKey = "Cart";
 
-        public CartService(IHttpContextAccessor httpContextAccessor, IProductService productService, IReservationService reservationService)
+        public CartService(IProductService productService,
+            IReservationService reservationService,
+            ICartSessionManager sessionManager)
         {
-            _httpContextAccessor = httpContextAccessor;
             _productService = productService;
             _reservationService = reservationService;
+            _sessionManager = sessionManager;
         }
 
 
-        public async Task<OperationResult<HttpStatusCode, bool>> AddToCart(int productId, int quantity)
+        public async Task<OperationResult<HttpStatusCode, bool>> AddToCartAsync(int productId, int quantity)
         {
             var result = new OperationResult<HttpStatusCode, bool>();
 
+            if (quantity <= 0)
+            {
+                result.AddError("Quantity must be positive");
+                result.EnumResult = HttpStatusCode.BadRequest;
+                return result;
+            }
 
             var product = await _productService.GetByIdAsync(productId);
 
-            if (product.Result == null || product.Result.Stock < quantity)
+            if (product.Result == null)
             {
                 result.AddError("Product not available.");
                 result.EnumResult = HttpStatusCode.NotFound;
+                return result;
             }
 
-           
-            var cart = GetCart();
+            if (product.Result.Stock < quantity)
+            {
+                result.AddError("Insufficient stock");
+                result.EnumResult = HttpStatusCode.Conflict;
+                return result;
+            }
+
+            
+            var cart = _sessionManager.GetCart();
+
             var cartProduct = cart.FirstOrDefault(c => c.ProductId == productId);
             if (cartProduct == null)
             {
@@ -46,9 +64,9 @@ namespace E_Commerce.Services.Implementation
             {
                 cartProduct.Quantity += quantity;
             }
-            SaveCart(cart);
+            _sessionManager.SaveCart(cart);
 
-            //decrease inventory 
+            //TODO decrease inventory 
             //product.Result!.Stock -= quantity;
 
             //await _reservationService.AddProductReservation(productId, quantity);
@@ -59,26 +77,49 @@ namespace E_Commerce.Services.Implementation
             return result;
         }
 
-        public OperationResult<HttpStatusCode, bool> UpdateCart(int productId, int quantity)
+        public async Task<OperationResult<HttpStatusCode, bool>> UpdateCartAsync(int productId, int quantity)
         {
             var result = new OperationResult<HttpStatusCode, bool>();
 
-            var cart = GetCart();
-            var item = cart.FirstOrDefault(c => c.ProductId == productId);
-            if (item != null)
+            if (quantity <= 0)
             {
-                item.Quantity = quantity;
-                SaveCart(cart);
-                result.Result = true;
-                result.EnumResult = HttpStatusCode.OK;
+                result.AddError("Quantity must be positive");
+                result.EnumResult = HttpStatusCode.BadRequest;
+                return result;
             }
 
-            else
+            var cart = _sessionManager.GetCart();
+
+            var product = await _productService.GetByIdAsync(productId);
+
+            if (product.Result == null)
             {
-                result.AddError("item not found in cart");
+                result.AddError("Product not available.");
                 result.EnumResult = HttpStatusCode.NotFound;
+                return result;
             }
 
+            if (product.Result.Stock < quantity)
+            {
+                result.AddError("Insufficient stock");
+                result.EnumResult = HttpStatusCode.Conflict;
+                return result;
+            }
+
+            var cartProduct = cart.FirstOrDefault(c => c.ProductId == productId);
+
+            if (cartProduct == null)
+            {
+                result.AddError("product not found in cart");
+                result.EnumResult = HttpStatusCode.NotFound;
+                return result;
+            }
+          
+            cartProduct.Quantity = quantity;
+            _sessionManager.SaveCart(cart);
+
+            result.Result = true;
+            result.EnumResult = HttpStatusCode.OK;
             return result;
         }
 
@@ -86,9 +127,11 @@ namespace E_Commerce.Services.Implementation
         {
             var result = new OperationResult<HttpStatusCode, bool>();
 
-            var cart = GetCart();
+            var cart = _sessionManager.GetCart();
+
             cart.RemoveAll(c => c.ProductId == productId);
-            SaveCart(cart);
+
+            _sessionManager.SaveCart(cart);
 
             result.Result = true;
             result.EnumResult = HttpStatusCode.OK;
@@ -99,28 +142,52 @@ namespace E_Commerce.Services.Implementation
         {
             var result = new OperationResult<HttpStatusCode, bool>();
  
-            SaveCart(new List<CartItemDto>());
+            _sessionManager.ClearCart();
             
             result.Result = true;
             result.EnumResult = HttpStatusCode.OK; 
             return result;
         }
 
+ 
 
-        private void SaveCart(List<CartItemDto> cart)
+        public OperationResult<HttpStatusCode, CartDto> GetCartDetails()
         {
-            var session = _httpContextAccessor.HttpContext?.Session;
-            session?.Set(CartSessionKey, JsonSerializer.SerializeToUtf8Bytes(cart));
-        }
+            var result = new OperationResult<HttpStatusCode, CartDto>();
+            result.Result =  new CartDto();
+            result.Result.Products = new List<CartProductDto>();
+            var cart = _sessionManager.GetCart();
 
-        private List<CartItemDto> GetCart()
-        {
-            byte[]? cart = null;
-            var session = _httpContextAccessor.HttpContext?.Session;
-            session?.TryGetValue(CartSessionKey, out cart);
-            if (cart != null)
-                return JsonSerializer.Deserialize<List<CartItemDto>>(cart) ?? new List<CartItemDto>();
-            return new List<CartItemDto>();
+            var productIds = cart.Select(i => i.ProductId).Distinct().ToList();
+
+            var productsResult =  _productService.GetByIds(productIds);
+            
+            foreach (var item in cart)
+            {
+                var product = productsResult.Result.FirstOrDefault(x => x.Id == item.ProductId);
+
+                if (product == null)
+                {
+                    result.AddError("Error in returning cart");
+                    result.EnumResult = HttpStatusCode.NotFound;
+                    return result;
+                }
+
+
+                result.Result.Products.Add(new CartProductDto
+                {
+                    ProductImage = product.ImageUrl,
+                    ProductName = product.Name,
+                    ProductPrice = product.Price,
+                    Quantity = item.Quantity
+                });
+
+                result.Result.TotalAmount += item.Quantity * product.Price;
+
+            }
+
+            result.EnumResult = HttpStatusCode.OK;
+            return result;
         }
     }
 }
