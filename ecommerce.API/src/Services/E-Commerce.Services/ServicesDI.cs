@@ -46,6 +46,7 @@ namespace E_Commerce.Services
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICartSessionManager, CartSessionManager>();
 
 
             services.AddScoped<IGeminiService, GeminiService>();

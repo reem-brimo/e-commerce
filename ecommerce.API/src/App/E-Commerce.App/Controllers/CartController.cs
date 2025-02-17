@@ -11,13 +11,21 @@ namespace E_Commerce.App.Controllers
     {
         private readonly ICartService _cartService = cartService;
 
+
+        [HttpGet]
+        public IActionResult GetCart()
+        {
+            var result = _cartService.GetCartDetails();
+            return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
+        }
+
         [HttpPost]
         [Route("{productId}/{quantity}")]
         
-        public async Task<IActionResult> AddToCartAsync(int productId, int quantity)
+        public async Task<IActionResult> AddToCart(int productId, int quantity)
         {
 
-            var result = await _cartService.AddToCart(productId, quantity);
+            var result = await _cartService.AddToCartAsync(productId, quantity);
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
 
         }
@@ -25,10 +33,10 @@ namespace E_Commerce.App.Controllers
        
         [HttpPut]
         [Route("{productId}/{quantity}")]
-        [Authorize]
-        public IActionResult UpdateCart(int productId, int quantity)
+        //[Authorize]
+        public async Task<IActionResult> UpdateCart(int productId, int quantity)
         {
-            var result1 = _cartService.UpdateCart(productId, quantity);
+            var result1 = await _cartService.UpdateCartAsync(productId, quantity);
             return GetResult(result1.ErrorMessages, result1.EnumResult, result1.Result);
 
         }
@@ -36,9 +44,9 @@ namespace E_Commerce.App.Controllers
         [HttpDelete]
         [Route("{productId}")]
 
-        public IActionResult RemoveFromCart(int id)
+        public IActionResult RemoveFromCart(int productId)
         {
-            var result = _cartService.RemoveFromCart(id);
+            var result = _cartService.RemoveFromCart(productId);
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
 
         }
@@ -50,6 +58,7 @@ namespace E_Commerce.App.Controllers
             return GetResult(result.ErrorMessages, result.EnumResult, result.Result);
         }
 
-        //get current cart
+       
+
     }
 }

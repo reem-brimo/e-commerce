@@ -5,6 +5,7 @@ namespace E_Commerce.Infrastructure.Repositories.Interfaces
 {
     public interface IProductRepository : IGenericRepositoryAsync<Product>
     {
+        IEnumerable<Product> GetByIds(List<int> ids);
       
     }
 }

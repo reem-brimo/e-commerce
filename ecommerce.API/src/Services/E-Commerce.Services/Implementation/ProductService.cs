@@ -169,7 +169,23 @@ namespace E_Commerce.Services.Implementation
             return result;
         }
 
+        public OperationResult<HttpStatusCode, IEnumerable<Product>> GetByIds(List<int> ids)
+        {
 
+            var result = new OperationResult<HttpStatusCode, IEnumerable<Product>>();
+            var products = _productRepository.GetByIds(ids);
+
+            if (products == null)
+            {
+                result.AddError("Product Not Found");
+                result.EnumResult = HttpStatusCode.NotFound;
+                return result;
+            }
+
+            result.EnumResult = HttpStatusCode.OK;
+            result.Result = products;
+            return result;
+        }
     }
 
 
