@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 
-namespace E_Commerce.Infrastructure.InfrastructureBases
+namespace E_Commerce.Services.InfrastructureBases
 {
     public interface IGenericRepositoryAsync<T> where T : class
     {

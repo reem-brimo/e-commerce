@@ -1,7 +1,7 @@
 ﻿using E_Commerce.Data.Models;
-using E_Commerce.Infrastructure.Repositories.Interfaces;
 using E_Commerce.Services.DTOs;
 using E_Commerce.Services.Interfaces;
+using E_Commerce.Services.Repositories;
 using E_Commerce.SharedKernal.OperationResults;
 using System.Net;
 

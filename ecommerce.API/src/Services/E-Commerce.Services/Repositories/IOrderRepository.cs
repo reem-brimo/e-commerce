@@ -1,7 +1,7 @@
 ﻿using E_Commerce.Data.Models;
-using E_Commerce.Infrastructure.InfrastructureBases;
+using E_Commerce.Services.InfrastructureBases;
 
-namespace E_Commerce.Infrastructure.Repositories.Interfaces
+namespace E_Commerce.Services.Repositories
 {
     public interface IOrderRepository : IGenericRepositoryAsync<Order>
     {

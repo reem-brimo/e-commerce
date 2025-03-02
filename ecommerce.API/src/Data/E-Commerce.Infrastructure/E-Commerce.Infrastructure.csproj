@@ -16,9 +16,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.12" />
+	<PackageReference Include="Stripe.net" Version="47.3.0" />
+
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Services\E-Commerce.Services\E-Commerce.Services.csproj" />
     <ProjectReference Include="..\E-Commerce.Data\E-Commerce.Data.csproj" />
   </ItemGroup>
 

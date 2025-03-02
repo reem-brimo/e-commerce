@@ -2,7 +2,6 @@ using E_Commerce.App.Utility;
 using E_Commerce.Data.Models.Security;
 using E_Commerce.Infrastructure;
 using E_Commerce.Services;
-using E_Commerce.SharedKernal;
 using E_Commerce.SharedKernal.Error_Handler;
 using Serilog;
 

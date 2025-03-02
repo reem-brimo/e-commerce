@@ -1,7 +1,6 @@
 ﻿using E_Commerce.Data.Models;
-using E_Commerce.Infrastructure.Repositories.Interfaces;
 using E_Commerce.Services.Implementation;
-using E_Commerce.Services.Interfaces;
+using E_Commerce.Services.Repositories;
 using Moq;
 using System.Net;
 
@@ -10,7 +9,7 @@ namespace Tests.Services
     public class ProductServiceTests
     {
         private readonly Mock<IProductRepository> _mockProductRepository;
-        private readonly IProductService _productService;
+        private readonly ProductService _productService;
 
         public ProductServiceTests()
         {

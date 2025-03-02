@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using E_Commerce.Services.InfrastructureBases;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace E_Commerce.Infrastructure.InfrastructureBases
+namespace E_Commerce.Infrastructure.Repositories
 {
     public class GenericRepositoryAsync<T> : IGenericRepositoryAsync<T> where T : class
     {

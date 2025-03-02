@@ -1,4 +1,4 @@
-﻿using E_Commerce.Services.Configuration;
+﻿using E_Commerce.Data.Configuration;
 using E_Commerce.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

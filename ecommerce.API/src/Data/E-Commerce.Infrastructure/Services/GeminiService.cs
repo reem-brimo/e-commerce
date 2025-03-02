@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace E_Commerce.Services.Implementation4
+namespace E_Commerce.Infrastructure.Services
 {
     public class GeminiService : IGeminiService
     {

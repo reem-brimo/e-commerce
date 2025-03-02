@@ -1,11 +1,17 @@
-﻿using E_Commerce.Data.Models.Security;
-using E_Commerce.Infrastructure.Repositories.Implementations;
-using E_Commerce.Infrastructure.Repositories.Interfaces;
+﻿using E_Commerce.Data.Configuration;
+using E_Commerce.Data.Models.Security;
+using E_Commerce.Infrastructure.Factories;
+using E_Commerce.Infrastructure.Repositories;
 using E_Commerce.Infrastructure.Seed;
+using E_Commerce.Infrastructure.Services;
+using E_Commerce.Services.Interfaces;
+using E_Commerce.Services.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
 
 namespace E_Commerce.Infrastructure
 {
@@ -32,7 +38,35 @@ namespace E_Commerce.Infrastructure
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<IReservationRepository,ReservationRepository>();
             services.AddScoped<IOrderRepository,OrderRepository>();
-       
+
+
+            services.AddScoped<IGeminiService, GeminiService>();
+            services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
+
+            services.AddHttpClient<IGeminiService, GeminiService>((serviceProvider, client) =>
+            {
+                var options = serviceProvider.GetRequiredService<IOptions<GeminiOptions>>().Value;
+
+                client.BaseAddress = new Uri($"{options.BaseUrl}?key={options.ApiKey}");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+
+            services.AddScoped<StripePaymentService>(provider =>
+            {
+                var stripeSettings = provider.GetRequiredService<IOptions<StripeSettings>>().Value;
+                return new StripePaymentService(stripeSettings.SecretKey);
+            });
+
+            //services.Configure<PayPalSettings>(builder.Configuration.GetSection("PayPal"));
+            //services.AddScoped<PayPalPaymentService>(provider =>
+            //{
+            //    var payPalSettings = provider.GetRequiredService<IOptions<PayPalSettings>>().Value;
+            //    return new PayPalPaymentService(payPalSettings.ClientId, payPalSettings.Secret);
+            //});
+
+            services.AddScoped<IPaymentServiceFactory, PaymentServiceFactory>();
 
             return services;
         }

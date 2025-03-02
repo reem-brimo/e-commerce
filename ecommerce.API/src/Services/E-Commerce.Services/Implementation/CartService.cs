@@ -1,11 +1,7 @@
-﻿using E_Commerce.Data.Models;
-using E_Commerce.Services.DTOs;
+﻿using E_Commerce.Services.DTOs;
 using E_Commerce.Services.Interfaces;
 using E_Commerce.SharedKernal.OperationResults;
-using Mapster;
-using Microsoft.AspNetCore.Http;
 using System.Net;
-using System.Text.Json;
 
 namespace E_Commerce.Services.Implementation
 {

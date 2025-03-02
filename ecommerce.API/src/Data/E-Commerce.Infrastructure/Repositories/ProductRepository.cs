@@ -1,8 +1,7 @@
 ﻿using E_Commerce.Data.Models;
-using E_Commerce.Infrastructure.InfrastructureBases;
-using E_Commerce.Infrastructure.Repositories.Interfaces;
+using E_Commerce.Services.Repositories;
 
-namespace E_Commerce.Infrastructure.Repositories.Implementations
+namespace E_Commerce.Infrastructure.Repositories
 {
     public class ProductRepository : GenericRepositoryAsync<Product>, IProductRepository
     {
@@ -15,7 +14,7 @@ namespace E_Commerce.Infrastructure.Repositories.Implementations
 
         public IEnumerable<Product> GetByIds(List<int> ids)
         {
-            return _context.Products.Where(p => ids.Contains(p.Id));                   
+            return _context.Products.Where(p => ids.Contains(p.Id));
         }
     }
 

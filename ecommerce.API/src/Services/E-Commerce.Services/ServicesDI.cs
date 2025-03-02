@@ -1,14 +1,11 @@
-﻿using E_Commerce.Services.Configuration;
+﻿using E_Commerce.Data.Configuration;
 using E_Commerce.Services.Implementation;
-using E_Commerce.Services.Implementation4;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mosque.Services.Mappings;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace E_Commerce.Services
@@ -17,6 +14,7 @@ namespace E_Commerce.Services
     {
         public static IServiceCollection AddServicesDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
 
             services.AddAuthentication(options =>
@@ -49,16 +47,7 @@ namespace E_Commerce.Services
             services.AddScoped<ICartSessionManager, CartSessionManager>();
 
 
-            services.AddScoped<IGeminiService, GeminiService>();
-            services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
-
-            services.AddHttpClient<IGeminiService, GeminiService>((serviceProvider, client) =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<GeminiOptions>>().Value;
-
-                client.BaseAddress = new Uri($"{options.BaseUrl}?key={options.ApiKey}");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            });
+           
 
             return services;
         }
